@@ -1,0 +1,11 @@
+{
+  "configurations": [
+
+    {
+      "name": "practice1 (Flutter)",
+      "program": "lib/main.dart",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}

@@ -6,8 +6,9 @@ import 'package:practice1/screens/widgets.dart';
 
 class TaskPage extends StatefulWidget {
   final Task task;
+  final bool darkthemeSwitcher;
 
-  TaskPage({@required this.task});
+  TaskPage({@required this.task, this.darkthemeSwitcher});
 
   @override
   _TaskPageState createState() => _TaskPageState();
@@ -17,7 +18,6 @@ class _TaskPageState extends State<TaskPage> {
   String _taskTitle = "";
   String _taskDescription = "";
   String _todoText = '';
-
   DatabaseHelper _dbhelper = DatabaseHelper();
 
   int _taskid = 0;
@@ -61,6 +61,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: widget.darkthemeSwitcher ? Colors.black87 : Colors.white,
         child: SafeArea(
           child: Stack(children: [
             Column(
@@ -78,10 +79,14 @@ class _TaskPageState extends State<TaskPage> {
                             padding: EdgeInsets.all(10),
                             child: Icon(
                               Icons.arrow_back_ios,
+                              color: widget.darkthemeSwitcher
+                                  ? Colors.white
+                                  : null,
                             )),
                       ),
                       Expanded(
                           child: TextField(
+                        textCapitalization: TextCapitalization.sentences,
                         focusNode: _titleFocus,
                         autofocus: _taskid == 0 ? true : false,
                         onSubmitted: (value) async {
@@ -104,11 +109,18 @@ class _TaskPageState extends State<TaskPage> {
                         },
                         controller: TextEditingController(text: _taskTitle),
                         decoration: InputDecoration(
-                          hintText: 'Enter task title',
-                          border: InputBorder.none,
-                        ),
+                            hintText: 'Enter task title',
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(
+                              color: widget.darkthemeSwitcher
+                                  ? Colors.white60
+                                  : Colors.black45,
+                            )),
                         style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: widget.darkthemeSwitcher ? Colors.white : null,
+                        ),
                       ))
                     ],
                   ),
@@ -118,6 +130,7 @@ class _TaskPageState extends State<TaskPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       maxLines: null,
                       controller: TextEditingController(text: _taskDescription),
                       textInputAction: TextInputAction.done,
@@ -133,11 +146,17 @@ class _TaskPageState extends State<TaskPage> {
                       },
                       style: TextStyle(
                         fontSize: 18,
+                        color: widget.darkthemeSwitcher ? Colors.white : null,
                       ),
                       decoration: InputDecoration(
                           hintText: "Enter task description",
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20)),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          hintStyle: TextStyle(
+                            color: widget.darkthemeSwitcher
+                                ? Colors.white60
+                                : Colors.black45,
+                          )),
                     ),
                   ),
                 ),
@@ -164,6 +183,7 @@ class _TaskPageState extends State<TaskPage> {
                                   setState(() {});
                                 },
                                 child: TodoWidget(
+                                  darkthemeSwitcher: widget.darkthemeSwitcher,
                                   text: snapshot.data[index].title,
                                   isdone: snapshot.data[index].isdone == 0
                                       ? false
@@ -194,6 +214,7 @@ class _TaskPageState extends State<TaskPage> {
                         ),
                         Expanded(
                             child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           focusNode: _todoFocus,
                           controller: TextEditingController(text: _todoText),
                           onSubmitted: (value) async {
@@ -212,10 +233,18 @@ class _TaskPageState extends State<TaskPage> {
                               }
                             }
                           },
-                          decoration: InputDecoration(
-                            hintText: 'Enter todo item',
-                            border: InputBorder.none,
+                          style: TextStyle(
+                            color:
+                                widget.darkthemeSwitcher ? Colors.white : null,
                           ),
+                          decoration: InputDecoration(
+                              hintText: 'Enter todo item',
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                color: widget.darkthemeSwitcher
+                                    ? Colors.white60
+                                    : Colors.black45,
+                              )),
                         )),
                       ],
                     ),

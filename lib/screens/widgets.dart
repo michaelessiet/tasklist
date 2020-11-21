@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class TaskCard extends StatelessWidget {
   final String title;
   final String description;
+  final bool darkthemeSwitch;
 
-  TaskCard({this.title, this.description});
+  TaskCard({this.title, this.description, this.darkthemeSwitch});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,8 @@ class TaskCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          color: darkthemeSwitch ? Colors.black : Colors.white,
+          borderRadius: BorderRadius.circular(20)),
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,17 +22,16 @@ class TaskCard extends StatelessWidget {
           Text(
             title ?? '(Unnamed task)',
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: darkthemeSwitch ? Colors.white : null),
           ),
           Padding(
             padding: EdgeInsets.only(top: 10),
             child: Text(
               description ?? "This task has no description yet.",
               style: TextStyle(
-                fontSize: 16,
-              ),
+                  fontSize: 16, color: darkthemeSwitch ? Colors.white : null),
             ),
           )
         ],
@@ -42,8 +43,9 @@ class TaskCard extends StatelessWidget {
 class TodoWidget extends StatelessWidget {
   final String text;
   final bool isdone;
+  final bool darkthemeSwitcher;
 
-  TodoWidget({this.isdone, @required this.text});
+  TodoWidget({this.isdone, @required this.text, this.darkthemeSwitcher});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,11 @@ class TodoWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: isdone ? FontWeight.normal : FontWeight.bold,
-                  color: isdone ? Colors.grey : null),
+                  color: darkthemeSwitcher
+                      ? isdone
+                          ? Colors.grey
+                          : Colors.white
+                      : Colors.black),
             ),
           )
         ],

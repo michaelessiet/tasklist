@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:practice1/databasehelper.dart';
+import 'package:practice1/main.dart';
 import 'package:practice1/screens/taskpage.dart';
 import 'package:practice1/screens/widgets.dart';
 
@@ -12,13 +14,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DatabaseHelper _dbHelper = DatabaseHelper();
-
+  bool darkthemeSwitcher = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.grey[200],
+          color: darkthemeSwitcher ? Colors.black87 : Colors.grey[200],
           width: double.infinity,
           padding: EdgeInsets.only(top: 20, right: 20, left: 20),
           child: Stack(children: [
@@ -44,6 +46,27 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
+                    Container(
+                      width: 200,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            darkthemeSwitcher ? Icons.bedtime : Icons.brightness_5,
+                            color: darkthemeSwitcher ? Colors.white : null,
+                            size: 30,
+                          ),
+                          CupertinoSwitch(
+                              value: darkthemeSwitcher,
+                              activeColor: Colors.deepPurple,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  darkthemeSwitcher = value;
+                                });
+                              })
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 Expanded(
@@ -60,12 +83,15 @@ class _HomePageState extends State<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => TaskPage(
+                                            darkthemeSwitcher:
+                                                darkthemeSwitcher,
                                             task: snapshot.data[index],
                                           ))).then((value) {
                                 setState(() {});
                               });
                             },
                             child: TaskCard(
+                              darkthemeSwitch: darkthemeSwitcher,
                               title: snapshot.data[index].title,
                               description: snapshot.data[index].description,
                             ),
@@ -84,6 +110,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TaskPage(
+                              darkthemeSwitcher: darkthemeSwitcher,
                               task: null,
                             )),
                   ).then((value) {

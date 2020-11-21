@@ -25,13 +25,26 @@ class _HomePageState extends State<HomePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 32),
-                  child: Icon(
-                    Icons.bubble_chart_outlined,
-                    size: 50,
-                    color: Colors.deepPurple,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 32),
+                      child: Icon(
+                        Icons.grading,
+                        size: 50,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        'Tasklist',
+                        style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
                 Expanded(
                     child: FutureBuilder(
@@ -49,10 +62,8 @@ class _HomePageState extends State<HomePage> {
                                       builder: (context) => TaskPage(
                                             task: snapshot.data[index],
                                           ))).then((value) {
-                                            setState(() {
-                                              
-                                            });
-                                          });
+                                setState(() {});
+                              });
                             },
                             child: TaskCard(
                               title: snapshot.data[index].title,

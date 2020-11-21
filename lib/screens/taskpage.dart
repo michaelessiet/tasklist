@@ -92,13 +92,8 @@ class _TaskPageState extends State<TaskPage> {
                               Task _newTask = Task(title: value);
 
                               _taskid = await _dbhelper.insertTask(_newTask);
-
-                              print('new task id: $_taskid');
-
-                              print('a new  task was added');
                             } else {
                               await _dbhelper.updateTaskTitle(_taskid, value);
-                              print('You have updated your task title ');
                             }
                             setState(() {
                               _taskTitle = value;

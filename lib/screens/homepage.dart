@@ -1,26 +1,27 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:practice1/databasehelper.dart';
-import 'package:practice1/main.dart';
 import 'package:practice1/screens/taskpage.dart';
 import 'package:practice1/screens/widgets.dart';
 
 class HomePage extends StatefulWidget {
+  final bool darkthemeSwitcher;
+  var box;
+  HomePage({this.darkthemeSwitcher, this.box});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   DatabaseHelper _dbHelper = DatabaseHelper();
-  bool darkthemeSwitcher = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: darkthemeSwitcher ? Colors.black87 : Colors.grey[200],
+          color: widget.darkthemeSwitcher ? Colors.black87 : Colors.grey[200],
           width: double.infinity,
           padding: EdgeInsets.only(top: 20, right: 20, left: 20),
           child: Stack(children: [
@@ -52,17 +53,19 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Icon(
-                            darkthemeSwitcher ? Icons.bedtime : Icons.brightness_5,
-                            color: darkthemeSwitcher ? Colors.white : null,
+                            widget.darkthemeSwitcher
+                                ? Icons.bedtime
+                                : Icons.brightness_5,
+                            color:
+                                widget.darkthemeSwitcher ? Colors.white : null,
                             size: 30,
                           ),
                           CupertinoSwitch(
-                              value: darkthemeSwitcher,
+                              value: widget.darkthemeSwitcher,
                               activeColor: Colors.deepPurple,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  darkthemeSwitcher = value;
-                                });
+                              onChanged: (value) {
+                                widget.box
+                                    .put('darkMode', !widget.darkthemeSwitcher);
                               })
                         ],
                       ),
@@ -84,14 +87,14 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (context) => TaskPage(
                                             darkthemeSwitcher:
-                                                darkthemeSwitcher,
+                                                widget.darkthemeSwitcher,
                                             task: snapshot.data[index],
                                           ))).then((value) {
                                 setState(() {});
                               });
                             },
                             child: TaskCard(
-                              darkthemeSwitch: darkthemeSwitcher,
+                              darkthemeSwitch: widget.darkthemeSwitcher,
                               title: snapshot.data[index].title,
                               description: snapshot.data[index].description,
                             ),
@@ -110,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TaskPage(
-                              darkthemeSwitcher: darkthemeSwitcher,
+                              darkthemeSwitcher: widget.darkthemeSwitcher,
                               task: null,
                             )),
                   ).then((value) {

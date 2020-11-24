@@ -16,11 +16,18 @@ class DatabaseHelper {
       await db.execute(
         "CREATE TABLE todo(id INTEGER PRIMARY KEY, title TEXT , isdone INTEGER, taskid INTEGER)",
       );
+      await db.execute(
+        "CREATE TABLE worktasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)",
+      );
+      await db.execute(
+        "CREATE TABLE worktodo(id INTEGER PRIMARY KEY, title TEXT , isdone INTEGER, taskid INTEGER)",
+      );
 
       return db;
     }, version: 1);
   }
 
+  //Casual tasks
   Future<int> insertTask(Task task) async {
     int taskid = 0;
     Database _db = await database();
@@ -87,5 +94,79 @@ class DatabaseHelper {
     Database _db = await database();
     await _db.rawDelete("DELETE FROM tasks WHERE id = '$id'");
     await _db.rawDelete("DELETE FROM todo WHERE taskid = '$id'");
+  }
+
+
+  /////////////////////////////////////////////////////////////////////
+
+
+
+  //Work tasks
+  Future<int> insertWorkTask(Task task) async {
+    int worktaskid = 0;
+    Database _db = await database();
+    await _db
+        .insert('worktasks', task.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      worktaskid = value;
+    });
+    return worktaskid;
+  }
+
+  Future<void> updateWorkTaskTitle(int id, String title) async {
+    Database _db = await database();
+    await _db.rawUpdate("UPDATE worktasks SET title = '$title' WHERE id = '$id' ");
+  }
+
+  Future<void> updateWorkTaskDescription(int id, String description) async {
+    Database _db = await database();
+    await _db.rawUpdate(
+        "UPDATE worktasks SET description = '$description' WHERE id = '$id' ");
+  }
+
+  Future<void> insertWorkTodo(Todo todo) async {
+    Database _db = await database();
+    await _db.insert('worktodo', todo.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<Task>> getWorkTasks() async {
+    Database _db = await database();
+
+    List<Map<String, dynamic>> taskMap = await _db.query('worktasks');
+
+    return List.generate(taskMap.length, (index) {
+      return Task(
+          id: taskMap[index]['id'],
+          title: taskMap[index]['title'],
+          description: taskMap[index]['description']);
+    });
+  }
+
+  Future<List<Todo>> getWorkTodo(int taskid) async {
+    Database _db = await database();
+
+    List<Map<String, dynamic>> todoMap =
+        await _db.rawQuery("SELECT * FROM worktodo WHERE taskid = $taskid");
+
+    return List.generate(todoMap.length, (index) {
+      return Todo(
+          id: todoMap[index]['id'],
+          title: todoMap[index]['title'],
+          isdone: todoMap[index]['isdone'],
+          taskid: todoMap[index]['taskid']);
+    });
+  }
+
+  Future<void> updateWorkTodoDone(int id, int isdone) async {
+    Database _db = await database();
+    await _db.rawUpdate("UPDATE worktodo SET isdone = '$isdone' WHERE id = '$id' ");
+  }
+
+  Future<void> deleteWorkTask(int id) async {
+    Database _db = await database();
+    await _db.rawDelete("DELETE FROM worktasks WHERE id = '$id'");
+    await _db.rawDelete("DELETE FROM worktodo WHERE taskid = '$id'");
   }
 }

@@ -1,21 +1,20 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:practice1/databasehelper.dart';
 import 'package:practice1/screens/taskpage.dart';
 import 'package:practice1/screens/widgets.dart';
 
-class HomePage extends StatefulWidget {
+class Workpage extends StatefulWidget {
   final bool darkthemeSwitcher;
+  int selectedindex;
   var box;
-  HomePage({this.darkthemeSwitcher, this.box});
+  Workpage({this.box, this.darkthemeSwitcher, this.selectedindex});
   @override
-  _HomePageState createState() => _HomePageState();
+  _WorkpageState createState() => _WorkpageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _WorkpageState extends State<Workpage> {
   DatabaseHelper _dbHelper = DatabaseHelper();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                     child: FutureBuilder(
                   initialData: [],
-                  future: _dbHelper.getTasks(),
+                  future: _dbHelper.getWorkTasks(),
                   builder: (context, snapshot) {
                     return ListView.builder(
                         itemCount: snapshot.data.length,
@@ -117,6 +116,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => TaskPage(
                               darkthemeSwitcher: widget.darkthemeSwitcher,
                               task: null,
+                              selectedindex: widget.selectedindex,
                             )),
                   ).then((value) {
                     setState(() {});

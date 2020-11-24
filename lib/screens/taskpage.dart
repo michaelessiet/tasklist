@@ -7,8 +7,9 @@ import 'package:practice1/screens/widgets.dart';
 class TaskPage extends StatefulWidget {
   final Task task;
   final bool darkthemeSwitcher;
+  int selectedindex;
 
-  TaskPage({@required this.task, this.darkthemeSwitcher});
+  TaskPage({@required this.task, this.darkthemeSwitcher, this.selectedindex});
 
   @override
   _TaskPageState createState() => _TaskPageState();
@@ -27,6 +28,14 @@ class _TaskPageState extends State<TaskPage> {
   FocusNode _todoFocus;
 
   bool _contentVisible = false;
+
+  pagecheckforTodoList() {
+    if (widget.selectedindex != 1) {
+      return _dbhelper.getTodo(_taskid);
+    } else {
+      return _dbhelper.getWorkTodo(_taskid);
+    }
+  }
 
   @override
   void initState() {
@@ -61,7 +70,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: widget.darkthemeSwitcher ? Colors.black87 : Colors.white,
+        color: widget.darkthemeSwitcher ? Colors.grey[850] : Colors.white,
         child: SafeArea(
           child: Stack(children: [
             Column(
@@ -90,21 +99,42 @@ class _TaskPageState extends State<TaskPage> {
                         focusNode: _titleFocus,
                         autofocus: _taskid == 0 ? true : false,
                         onSubmitted: (value) async {
-                          //check if the field is empty
-                          if (value != '') {
-                            //check if the task is null
-                            if (widget.task == null) {
-                              Task _newTask = Task(title: value);
+                          //Check if we're on work page
+                          if (widget.selectedindex != 1) {
+                            //check if the field is empty
+                            if (value != '') {
+                              //check if the task is null
+                              if (widget.task == null) {
+                                Task _newTask = Task(title: value);
 
-                              _taskid = await _dbhelper.insertTask(_newTask);
-                            } else {
-                              await _dbhelper.updateTaskTitle(_taskid, value);
+                                _taskid = await _dbhelper.insertTask(_newTask);
+                              } else {
+                                await _dbhelper.updateTaskTitle(_taskid, value);
+                              }
+                              setState(() {
+                                _taskTitle = value;
+                                _contentVisible = true;
+                              });
+                              _descriptionFocus.requestFocus();
                             }
-                            setState(() {
-                              _taskTitle = value;
-                              _contentVisible = true;
-                            });
-                            _descriptionFocus.requestFocus();
+                          } else {
+                            if (value != '') {
+                              //check if the task is null
+                              if (widget.task == null) {
+                                Task _newTask = Task(title: value);
+
+                                _taskid =
+                                    await _dbhelper.insertWorkTask(_newTask);
+                              } else {
+                                await _dbhelper.updateWorkTaskTitle(
+                                    _taskid, value);
+                              }
+                              setState(() {
+                                _taskTitle = value;
+                                _contentVisible = true;
+                              });
+                              _descriptionFocus.requestFocus();
+                            }
                           }
                         },
                         controller: TextEditingController(text: _taskTitle),
@@ -137,10 +167,21 @@ class _TaskPageState extends State<TaskPage> {
                       focusNode: _descriptionFocus,
                       onSubmitted: (value) {
                         _todoFocus.requestFocus();
-                        if (value != '') {
-                          if (_taskid != 0) {
-                            _dbhelper.updateTaskDescription(_taskid, value);
-                            _taskDescription = value;
+                        //Check if we're on work page
+                        if (widget.selectedindex != 1) {
+                          if (value != '') {
+                            if (_taskid != 0) {
+                              _dbhelper.updateTaskDescription(_taskid, value);
+                              _taskDescription = value;
+                            }
+                          }
+                        } else {
+                          if (value != '') {
+                            if (_taskid != 0) {
+                              _dbhelper.updateWorkTaskDescription(
+                                  _taskid, value);
+                              _taskDescription = value;
+                            }
                           }
                         }
                       },
@@ -164,7 +205,7 @@ class _TaskPageState extends State<TaskPage> {
                   visible: _contentVisible,
                   child: FutureBuilder(
                     initialData: [],
-                    future: _dbhelper.getTodo(_taskid),
+                    future: pagecheckforTodoList(),
                     builder: (context, snapshot) {
                       return Expanded(
                         child: ListView.builder(
@@ -172,13 +213,25 @@ class _TaskPageState extends State<TaskPage> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () async {
-                                  //switch todo completion state
+                                  //check if we're on work page 
+                                  if(widget.selectedindex != 1) {
+                                    //switch todo completion state
                                   if (snapshot.data[index].isdone == 0) {
                                     await _dbhelper.updateTodoDone(
                                         snapshot.data[index].id, 1);
                                   } else {
                                     await _dbhelper.updateTodoDone(
                                         snapshot.data[index].id, 0);
+                                  }
+                                  }else{
+                                    //switch todo completion state
+                                  if (snapshot.data[index].isdone == 0) {
+                                    await _dbhelper.updateWorkTodoDone(
+                                        snapshot.data[index].id, 1);
+                                  } else {
+                                    await _dbhelper.updateWorkTodoDone(
+                                        snapshot.data[index].id, 0);
+                                  }
                                   }
                                   setState(() {});
                                 },
@@ -218,7 +271,9 @@ class _TaskPageState extends State<TaskPage> {
                           focusNode: _todoFocus,
                           controller: TextEditingController(text: _todoText),
                           onSubmitted: (value) async {
-                            if (value != '') {
+                            //check if we're on work page 
+                            if(widget.selectedindex != 1) {
+                              if (value != '') {
                               //check if the task is null
                               if (_taskid != 0) {
                                 DatabaseHelper _dbhelper = DatabaseHelper();
@@ -231,6 +286,22 @@ class _TaskPageState extends State<TaskPage> {
                                 setState(() {});
                                 _todoFocus.requestFocus();
                               }
+                            }
+                            }else{
+                              if (value != '') {
+                              //check if the task is null
+                              if (_taskid != 0) {
+                                DatabaseHelper _dbhelper = DatabaseHelper();
+
+                                Todo _newTodo = Todo(
+                                    title: value, isdone: 0, taskid: _taskid);
+
+                                await _dbhelper.insertWorkTodo(_newTodo);
+
+                                setState(() {});
+                                _todoFocus.requestFocus();
+                              }
+                            }
                             }
                           },
                           style: TextStyle(
@@ -255,13 +326,21 @@ class _TaskPageState extends State<TaskPage> {
             Visibility(
               visible: _contentVisible,
               child: Positioned(
-                bottom: 20,
+                bottom: 40,
                 right: 20,
                 child: GestureDetector(
                   onTap: () async {
-                    if (_taskid != 0) {
+                    //checking if we're on work page
+                    if(widget.selectedindex != 1){
+                      if (_taskid != 0) {
                       await _dbhelper.deleteTask(_taskid);
                       Navigator.pop(context);
+                    }
+                    } else {
+                      if (_taskid != 0) {
+                      await _dbhelper.deleteWorkTask(_taskid);
+                      Navigator.pop(context);
+                    }
                     }
                   },
                   child: Container(

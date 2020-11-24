@@ -13,14 +13,14 @@ class TaskCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: darkthemeSwitch ? Colors.black : Colors.white,
+          color: darkthemeSwitch ? Colors.black54 : Colors.white,
           borderRadius: BorderRadius.circular(20)),
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title ?? '(Unnamed task)',
+            title ?? 'Unnamed task',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -32,6 +32,7 @@ class TaskCard extends StatelessWidget {
               description ?? "This task has no description yet.",
               style: TextStyle(
                   fontSize: 16, color: darkthemeSwitch ? Colors.white : null),
+              maxLines: 3,
             ),
           )
         ],

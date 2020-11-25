@@ -60,8 +60,9 @@ class _WorkpageState extends State<Workpage> {
                             onTap: () {
                               Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                       builder: (context) => TaskPage(
+                                            index: index,
                                             darkthemeSwitcher:
                                                 widget.darkthemeSwitcher,
                                             task: snapshot.data[index],
@@ -71,6 +72,7 @@ class _WorkpageState extends State<Workpage> {
                               });
                             },
                             child: TaskCard(
+                              index: index,
                               darkthemeSwitch: widget.darkthemeSwitcher,
                               title: snapshot.data[index].title,
                               description: snapshot.data[index].description,
@@ -113,7 +115,7 @@ class _WorkpageState extends State<Workpage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                         builder: (context) => TaskPage(
                               darkthemeSwitcher: widget.darkthemeSwitcher,
                               task: null,

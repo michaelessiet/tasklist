@@ -7,9 +7,10 @@ import 'package:practice1/screens/widgets.dart';
 class TaskPage extends StatefulWidget {
   final Task task;
   final bool darkthemeSwitcher;
+  final int index;
   int selectedindex;
 
-  TaskPage({@required this.task, this.darkthemeSwitcher, this.selectedindex});
+  TaskPage({@required this.task, this.darkthemeSwitcher, this.selectedindex, this.index});
 
   @override
   _TaskPageState createState() => _TaskPageState();
@@ -99,57 +100,57 @@ class _TaskPageState extends State<TaskPage> {
                         focusNode: _titleFocus,
                         autofocus: _taskid == 0 ? true : false,
                         onSubmitted: (value) async {
-                          //Check if we're on work page
-                          if (widget.selectedindex == 0) {
-                            //check if the field is empty
-                            if (value != '') {
-                              //check if the task is null
-                              if (widget.task == null) {
-                                Task _newTask = Task(title: value);
+                              //Check if we're on work page
+                              if (widget.selectedindex == 0) {
+                                //check if the field is empty
+                                if (value != '') {
+                                  //check if the task is null
+                                  if (widget.task == null) {
+                                    Task _newTask = Task(title: value);
 
-                                _taskid = await _dbhelper.insertWorkTask(_newTask);
+                                    _taskid =
+                                        await _dbhelper.insertWorkTask(_newTask);
+                                  } else {
+                                    await _dbhelper.updateWorkTaskTitle(
+                                        _taskid, value);
+                                  }
+                                  setState(() {
+                                    _taskTitle = value;
+                                    _contentVisible = true;
+                                  });
+                                  _descriptionFocus.requestFocus();
+                                }
                               } else {
-                                await _dbhelper.updateWorkTaskTitle(_taskid, value);
-                              }
-                              setState(() {
-                                _taskTitle = value;
-                                _contentVisible = true;
-                              });
-                              _descriptionFocus.requestFocus();
-                            }
-                          } else {
-                            if (value != '') {
-                              //check if the task is null
-                              if (widget.task == null) {
-                                Task _newTask = Task(title: value);
+                                if (value != '') {
+                                  //check if the task is null
+                                  if (widget.task == null) {
+                                    Task _newTask = Task(title: value);
 
-                                _taskid =
-                                    await _dbhelper.insertTask(_newTask);
-                              } else {
-                                await _dbhelper.updateTaskTitle(
-                                    _taskid, value);
+                                    _taskid = await _dbhelper.insertTask(_newTask);
+                                  } else {
+                                    await _dbhelper.updateTaskTitle(_taskid, value);
+                                  }
+                                  setState(() {
+                                    _taskTitle = value;
+                                    _contentVisible = true;
+                                  });
+                                  _descriptionFocus.requestFocus();
+                                }
                               }
-                              setState(() {
-                                _taskTitle = value;
-                                _contentVisible = true;
-                              });
-                              _descriptionFocus.requestFocus();
-                            }
-                          }
                         },
                         controller: TextEditingController(text: _taskTitle),
                         decoration: InputDecoration(
-                            hintText: 'Enter task title',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              color: widget.darkthemeSwitcher
-                                  ? Colors.white60
-                                  : Colors.black45,
-                            )),
+                                hintText: 'Enter task title',
+                                border: InputBorder.none,
+                                hintStyle: TextStyle(
+                                  color: widget.darkthemeSwitcher
+                                      ? Colors.white60
+                                      : Colors.black45,
+                                )),
                         style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: widget.darkthemeSwitcher ? Colors.white : null,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: widget.darkthemeSwitcher ? Colors.white : null,
                         ),
                       ))
                     ],
@@ -160,66 +161,65 @@ class _TaskPageState extends State<TaskPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: TextField(
-                      textCapitalization: TextCapitalization.sentences,
-                      maxLines: null,
-                      controller: TextEditingController(text: _taskDescription),
-                      textInputAction: TextInputAction.done,
-                      focusNode: _descriptionFocus,
-                      onChanged: (value) {
-                        //Check if we're on work page
-                        if (widget.selectedindex == 0) {
-                          print(value);
-                          if (value != '') {
-                            if (_taskid != 0) {
-                              _dbhelper.updateWorkTaskDescription(
-                                  _taskid, value);
-                              _taskDescription = value;
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLines: null,
+                          controller: TextEditingController(text: _taskDescription),
+                          textInputAction: TextInputAction.done,
+                          focusNode: _descriptionFocus,
+                          onChanged: (value) {
+                            //Check if we're on work page
+                            if (widget.selectedindex == 0) {
+                              if (value != '') {
+                                if (_taskid != 0) {
+                                  _dbhelper.updateWorkTaskDescription(
+                                      _taskid, value);
+                                  _taskDescription = value;
+                                }
+                              }
+                            } else {
+                              if (value != '') {
+                                if (_taskid != 0) {
+                                  _dbhelper.updateTaskDescription(_taskid, value);
+                                  _taskDescription = value;
+                                }
+                              }
                             }
-                          }
-                        } else {
-                          if (value != '') {
-                            if (_taskid != 0) {
-                              _dbhelper.updateTaskDescription(_taskid, value);
-                              _taskDescription = value;
+                          },
+                          onSubmitted: (value) {
+                            _todoFocus.requestFocus();
+                            //Check if we're on work page
+                            if (widget.selectedindex == 0) {
+                              if (value != '') {
+                                print(value);
+                                if (_taskid != 0) {
+                                  _dbhelper.updateWorkTaskDescription(
+                                      _taskid, value);
+                                  _taskDescription = value;
+                                }
+                              }
+                            } else {
+                              if (value != '') {
+                                if (_taskid != 0) {
+                                  _dbhelper.updateTaskDescription(_taskid, value);
+                                  _taskDescription = value;
+                                }
+                              }
                             }
-                          }
-                        }
-                      },
-                      onSubmitted: (value) {
-                        _todoFocus.requestFocus();
-                        //Check if we're on work page
-                        if (widget.selectedindex == 0) {
-                          if (value != '') {
-                            print(value);
-                            if (_taskid != 0) {
-                              _dbhelper.updateWorkTaskDescription(
-                                  _taskid, value);
-                              _taskDescription = value;
-                            }
-                          }
-                        } else {
-                          if (value != '') {
-                            if (_taskid != 0) {
-                              _dbhelper.updateTaskDescription(_taskid, value);
-                              _taskDescription = value;
-                            }
-                          }
-                        }
-                      },
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: widget.darkthemeSwitcher ? Colors.white : null,
-                      ),
-                      decoration: InputDecoration(
-                          hintText: "Enter task description",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                          hintStyle: TextStyle(
-                            color: widget.darkthemeSwitcher
-                                ? Colors.white60
-                                : Colors.black45,
-                          )),
-                    ),
+                          },
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: widget.darkthemeSwitcher ? Colors.white : null,
+                          ),
+                          decoration: InputDecoration(
+                              hintText: "Enter task description",
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                              hintStyle: TextStyle(
+                                color: widget.darkthemeSwitcher
+                                    ? Colors.white60
+                                    : Colors.black45,
+                              )),
+                        ),
                   ),
                 ),
                 Visibility(

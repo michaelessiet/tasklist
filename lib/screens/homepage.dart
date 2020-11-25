@@ -52,34 +52,38 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Expanded(
                     child: FutureBuilder(
-                  initialData: [],
-                  future: _dbHelper.getTasks(),
-                  builder: (context, snapshot) {
-                    return ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TaskPage(
-                                            darkthemeSwitcher:
-                                                widget.darkthemeSwitcher,
-                                            task: snapshot.data[index],
-                                          ))).then((value) {
-                                setState(() {});
+                        initialData: [],
+                        future: _dbHelper.getTasks(),
+                        builder: (context, snapshot) {
+                          return ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => TaskPage(
+                                                  index: index,
+                                                  darkthemeSwitcher:
+                                                      widget.darkthemeSwitcher,
+                                                  task: snapshot.data[index],
+                                                  selectedindex:
+                                                      widget.selectedIndex,
+                                                ))).then((value) {
+                                      setState(() {});
+                                    });
+                                  },
+                                  child: TaskCard(
+                                    index: index,
+                                    darkthemeSwitch: widget.darkthemeSwitcher,
+                                    title: snapshot.data[index].title,
+                                    description:
+                                        snapshot.data[index].description,
+                                  ),
+                                );
                               });
-                            },
-                            child: TaskCard(
-                              darkthemeSwitch: widget.darkthemeSwitcher,
-                              title: snapshot.data[index].title,
-                              description: snapshot.data[index].description,
-                            ),
-                          );
-                        });
-                  },
-                ))
+                        }))
               ],
             ),
             Positioned(
@@ -114,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                         builder: (context) => TaskPage(
                               darkthemeSwitcher: widget.darkthemeSwitcher,
                               task: null,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +8,8 @@ import 'package:practice1/screens/workpage.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 const darkModeBox = 'darkModeEnabler';
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   await Hive.initFlutter();
@@ -29,9 +31,6 @@ class _SplashscreenState extends State<Splashscreen> {
           var _darkthemeSwitch = box.get('darkMode', defaultValue: false);
           return MaterialApp(
             darkTheme: _darkthemeSwitch ? ThemeData.dark() : null,
-            theme: ThemeData(
-                textTheme: GoogleFonts.nunitoSansTextTheme(
-                    Theme.of(context).textTheme)),
             debugShowCheckedModeBanner: false,
             home: new SplashScreen(
               seconds: 2,
@@ -96,7 +95,7 @@ class PageNav extends StatefulWidget {
 }
 
 class _PageNavState extends State<PageNav> {
-  static List<Widget> _widgetOptions = <Widget>[ WorkTasks(),CasualTasks()];
+  static List<Widget> _widgetOptions = <Widget>[WorkTasks(), CasualTasks()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,15 +119,6 @@ class _PageNavState extends State<PageNav> {
               duration: Duration(milliseconds: 200),
               tabs: [
                 GButton(
-                  icon: Icons.home_outlined,
-                  iconSize: 20,
-                  iconColor: Colors.white,
-                  iconActiveColor: Colors.black,
-                  backgroundColor: Colors.white,
-                  text: 'Casual',
-                  textColor: Colors.black,
-                ),
-                GButton(
                   icon: Icons.work_outline,
                   iconSize: 20,
                   iconColor: Colors.white,
@@ -136,12 +126,20 @@ class _PageNavState extends State<PageNav> {
                   backgroundColor: Colors.white,
                   text: 'Work',
                   textColor: Colors.black,
+                ),
+                GButton(
+                  icon: Icons.home_outlined,
+                  iconSize: 20,
+                  iconColor: Colors.white,
+                  iconActiveColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  text: 'Casual',
+                  textColor: Colors.black,
                 )
               ],
               selectedIndex: _selectedIndex,
               onTabChange: (index) {
                 setState(() {
-                  print(_selectedIndex);
                   _selectedIndex = index;
                 });
               },

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class TaskCard extends StatelessWidget {
   final String title;
+  final int index;
   final String description;
   final bool darkthemeSwitch;
 
-  TaskCard({this.title, this.description, this.darkthemeSwitch});
+  TaskCard({this.title, this.description, this.darkthemeSwitch, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +21,12 @@ class TaskCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title ?? 'Unnamed task',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: darkthemeSwitch ? Colors.white : null),
-          ),
+              title ?? 'Unnamed task',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: darkthemeSwitch ? Colors.white : null),
+            ),
           Padding(
             padding: EdgeInsets.only(top: 10),
             child: Text(

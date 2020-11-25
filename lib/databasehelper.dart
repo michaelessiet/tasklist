@@ -103,15 +103,15 @@ class DatabaseHelper {
 
   //Work tasks
   Future<int> insertWorkTask(Task task) async {
-    int worktaskid = 0;
+    int taskid = 0;
     Database _db = await database();
     await _db
         .insert('worktasks', task.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
         .then((value) {
-      worktaskid = value;
+      taskid = value;
     });
-    return worktaskid;
+    return taskid;
   }
 
   Future<void> updateWorkTaskTitle(int id, String title) async {

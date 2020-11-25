@@ -7,8 +7,9 @@ import 'package:practice1/screens/widgets.dart';
 
 class HomePage extends StatefulWidget {
   final bool darkthemeSwitcher;
+  int selectedIndex;
   var box;
-  HomePage({this.darkthemeSwitcher, this.box});
+  HomePage({this.darkthemeSwitcher, this.box, this.selectedIndex});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -117,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => TaskPage(
                               darkthemeSwitcher: widget.darkthemeSwitcher,
                               task: null,
+                              selectedindex: widget.selectedIndex,
                             )),
                   ).then((value) {
                     setState(() {});

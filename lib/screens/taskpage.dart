@@ -30,10 +30,10 @@ class _TaskPageState extends State<TaskPage> {
   bool _contentVisible = false;
 
   pagecheckforTodoList() {
-    if (widget.selectedindex != 1) {
-      return _dbhelper.getTodo(_taskid);
-    } else {
+    if (widget.selectedindex == 0) {
       return _dbhelper.getWorkTodo(_taskid);
+    } else {
+      return _dbhelper.getTodo(_taskid);
     }
   }
 
@@ -100,16 +100,16 @@ class _TaskPageState extends State<TaskPage> {
                         autofocus: _taskid == 0 ? true : false,
                         onSubmitted: (value) async {
                           //Check if we're on work page
-                          if (widget.selectedindex != 1) {
+                          if (widget.selectedindex == 0) {
                             //check if the field is empty
                             if (value != '') {
                               //check if the task is null
                               if (widget.task == null) {
                                 Task _newTask = Task(title: value);
 
-                                _taskid = await _dbhelper.insertTask(_newTask);
+                                _taskid = await _dbhelper.insertWorkTask(_newTask);
                               } else {
-                                await _dbhelper.updateTaskTitle(_taskid, value);
+                                await _dbhelper.updateWorkTaskTitle(_taskid, value);
                               }
                               setState(() {
                                 _taskTitle = value;
@@ -124,9 +124,9 @@ class _TaskPageState extends State<TaskPage> {
                                 Task _newTask = Task(title: value);
 
                                 _taskid =
-                                    await _dbhelper.insertWorkTask(_newTask);
+                                    await _dbhelper.insertTask(_newTask);
                               } else {
-                                await _dbhelper.updateWorkTaskTitle(
+                                await _dbhelper.updateTaskTitle(
                                     _taskid, value);
                               }
                               setState(() {
@@ -165,21 +165,42 @@ class _TaskPageState extends State<TaskPage> {
                       controller: TextEditingController(text: _taskDescription),
                       textInputAction: TextInputAction.done,
                       focusNode: _descriptionFocus,
-                      onSubmitted: (value) {
-                        _todoFocus.requestFocus();
+                      onChanged: (value) {
                         //Check if we're on work page
-                        if (widget.selectedindex != 1) {
+                        if (widget.selectedindex == 0) {
+                          print(value);
                           if (value != '') {
                             if (_taskid != 0) {
-                              _dbhelper.updateTaskDescription(_taskid, value);
+                              _dbhelper.updateWorkTaskDescription(
+                                  _taskid, value);
                               _taskDescription = value;
                             }
                           }
                         } else {
                           if (value != '') {
                             if (_taskid != 0) {
+                              _dbhelper.updateTaskDescription(_taskid, value);
+                              _taskDescription = value;
+                            }
+                          }
+                        }
+                      },
+                      onSubmitted: (value) {
+                        _todoFocus.requestFocus();
+                        //Check if we're on work page
+                        if (widget.selectedindex == 0) {
+                          if (value != '') {
+                            print(value);
+                            if (_taskid != 0) {
                               _dbhelper.updateWorkTaskDescription(
                                   _taskid, value);
+                              _taskDescription = value;
+                            }
+                          }
+                        } else {
+                          if (value != '') {
+                            if (_taskid != 0) {
+                              _dbhelper.updateTaskDescription(_taskid, value);
                               _taskDescription = value;
                             }
                           }
@@ -213,25 +234,25 @@ class _TaskPageState extends State<TaskPage> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () async {
-                                  //check if we're on work page 
-                                  if(widget.selectedindex != 1) {
+                                  //check if we're on work page
+                                  if (widget.selectedindex == 0) {
                                     //switch todo completion state
-                                  if (snapshot.data[index].isdone == 0) {
-                                    await _dbhelper.updateTodoDone(
-                                        snapshot.data[index].id, 1);
+                                    if (snapshot.data[index].isdone == 0) {
+                                      await _dbhelper.updateWorkTodoDone(
+                                          snapshot.data[index].id, 1);
+                                    } else {
+                                      await _dbhelper.updateWorkTodoDone(
+                                          snapshot.data[index].id, 0);
+                                    }
                                   } else {
-                                    await _dbhelper.updateTodoDone(
-                                        snapshot.data[index].id, 0);
-                                  }
-                                  }else{
                                     //switch todo completion state
-                                  if (snapshot.data[index].isdone == 0) {
-                                    await _dbhelper.updateWorkTodoDone(
-                                        snapshot.data[index].id, 1);
-                                  } else {
-                                    await _dbhelper.updateWorkTodoDone(
-                                        snapshot.data[index].id, 0);
-                                  }
+                                    if (snapshot.data[index].isdone == 0) {
+                                      await _dbhelper.updateTodoDone(
+                                          snapshot.data[index].id, 1);
+                                    } else {
+                                      await _dbhelper.updateTodoDone(
+                                          snapshot.data[index].id, 0);
+                                    }
                                   }
                                   setState(() {});
                                 },
@@ -271,37 +292,37 @@ class _TaskPageState extends State<TaskPage> {
                           focusNode: _todoFocus,
                           controller: TextEditingController(text: _todoText),
                           onSubmitted: (value) async {
-                            //check if we're on work page 
-                            if(widget.selectedindex != 1) {
+                            //check if we're on work page
+                            if (widget.selectedindex == 0) {
                               if (value != '') {
-                              //check if the task is null
-                              if (_taskid != 0) {
-                                DatabaseHelper _dbhelper = DatabaseHelper();
+                                //check if the task is null
+                                if (_taskid != 0) {
+                                  DatabaseHelper _dbhelper = DatabaseHelper();
 
-                                Todo _newTodo = Todo(
-                                    title: value, isdone: 0, taskid: _taskid);
+                                  Todo _newTodo = Todo(
+                                      title: value, isdone: 0, taskid: _taskid);
 
-                                await _dbhelper.insertTodo(_newTodo);
+                                  await _dbhelper.insertWorkTodo(_newTodo);
 
-                                setState(() {});
-                                _todoFocus.requestFocus();
+                                  setState(() {});
+                                  _todoFocus.requestFocus();
+                                }
                               }
-                            }
-                            }else{
+                            } else {
                               if (value != '') {
-                              //check if the task is null
-                              if (_taskid != 0) {
-                                DatabaseHelper _dbhelper = DatabaseHelper();
+                                //check if the task is null
+                                if (_taskid != 0) {
+                                  DatabaseHelper _dbhelper = DatabaseHelper();
 
-                                Todo _newTodo = Todo(
-                                    title: value, isdone: 0, taskid: _taskid);
+                                  Todo _newTodo = Todo(
+                                      title: value, isdone: 0, taskid: _taskid);
 
-                                await _dbhelper.insertWorkTodo(_newTodo);
+                                  await _dbhelper.insertTodo(_newTodo);
 
-                                setState(() {});
-                                _todoFocus.requestFocus();
+                                  setState(() {});
+                                  _todoFocus.requestFocus();
+                                }
                               }
-                            }
                             }
                           },
                           style: TextStyle(
@@ -331,16 +352,16 @@ class _TaskPageState extends State<TaskPage> {
                 child: GestureDetector(
                   onTap: () async {
                     //checking if we're on work page
-                    if(widget.selectedindex != 1){
+                    if (widget.selectedindex == 0) {
                       if (_taskid != 0) {
-                      await _dbhelper.deleteTask(_taskid);
-                      Navigator.pop(context);
-                    }
+                        await _dbhelper.deleteWorkTask(_taskid);
+                        Navigator.pop(context);
+                      }
                     } else {
                       if (_taskid != 0) {
-                      await _dbhelper.deleteWorkTask(_taskid);
-                      Navigator.pop(context);
-                    }
+                        await _dbhelper.deleteTask(_taskid);
+                        Navigator.pop(context);
+                      }
                     }
                   },
                   child: Container(

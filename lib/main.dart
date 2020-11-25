@@ -60,6 +60,7 @@ class CasualTasks extends StatelessWidget {
             child: HomePage(
               darkthemeSwitcher: _darkthemeSwitch,
               box: box,
+              selectedIndex: _selectedIndex,
             ),
           );
         });
@@ -95,7 +96,7 @@ class PageNav extends StatefulWidget {
 }
 
 class _PageNavState extends State<PageNav> {
-  static List<Widget> _widgetOptions = <Widget>[CasualTasks(), WorkTasks()];
+  static List<Widget> _widgetOptions = <Widget>[ WorkTasks(),CasualTasks()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,6 +141,7 @@ class _PageNavState extends State<PageNav> {
               selectedIndex: _selectedIndex,
               onTabChange: (index) {
                 setState(() {
+                  print(_selectedIndex);
                   _selectedIndex = index;
                 });
               },

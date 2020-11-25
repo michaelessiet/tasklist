@@ -65,6 +65,7 @@ class _WorkpageState extends State<Workpage> {
                                             darkthemeSwitcher:
                                                 widget.darkthemeSwitcher,
                                             task: snapshot.data[index],
+                                            selectedindex: widget.selectedindex,
                                           ))).then((value) {
                                 setState(() {});
                               });

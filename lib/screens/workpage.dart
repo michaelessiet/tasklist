@@ -53,8 +53,15 @@ class _WorkpageState extends State<Workpage> {
                   initialData: [],
                   future: _dbHelper.getWorkTasks(),
                   builder: (context, snapshot) {
-                    return ListView.builder(
+                    return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.85
+                        ),
                         itemCount: snapshot.data.length,
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {

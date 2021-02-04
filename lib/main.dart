@@ -47,37 +47,53 @@ class _SplashscreenState extends State<Splashscreen> {
   }
 }
 
-class CasualTasks extends StatelessWidget {
+class CasualTasks extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _CasualTasksState createState() => _CasualTasksState();
+}
+
+class _CasualTasksState extends State<CasualTasks> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: Hive.box(darkModeBox).listenable(),
         builder: (context, box, widget) {
           var _darkthemeSwitch = box.get('darkMode', defaultValue: false);
-          return Container(
-            child: HomePage(
-              darkthemeSwitcher: _darkthemeSwitch,
-              box: box,
-              selectedIndex: _selectedIndex,
+          return GestureDetector(
+            
+            child: Container(
+              child: HomePage(
+                darkthemeSwitcher: _darkthemeSwitch,
+                box: box,
+                selectedIndex: _selectedIndex,
+              ),
             ),
           );
         });
   }
 }
 
-class WorkTasks extends StatelessWidget {
+class WorkTasks extends StatefulWidget {
+  @override
+  _WorkTasksState createState() => _WorkTasksState();
+}
+
+class _WorkTasksState extends State<WorkTasks> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: Hive.box(darkModeBox).listenable(),
       builder: (context, box, widget) {
         var _darkthemeSwitch = box.get('darkMode', defaultValue: false);
-        return Container(
-          child: Workpage(
-            darkthemeSwitcher: _darkthemeSwitch,
-            box: box,
-            selectedindex: _selectedIndex,
+        return GestureDetector(
+          
+          child: Container(
+            child: Workpage(
+              darkthemeSwitcher: _darkthemeSwitch,
+              box: box,
+              selectedindex: _selectedIndex,
+            ),
           ),
         );
       },

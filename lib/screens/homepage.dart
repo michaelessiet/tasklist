@@ -55,8 +55,12 @@ class _HomePageState extends State<HomePage> {
                         initialData: [],
                         future: _dbHelper.getTasks(),
                         builder: (context, snapshot) {
-                          return ListView.builder(
+                          return GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2, crossAxisSpacing: 10),
                               itemCount: snapshot.data.length,
+                              physics: BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {

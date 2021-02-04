@@ -162,9 +162,9 @@ class _TaskPageState extends State<TaskPage> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: TextField(
                           textCapitalization: TextCapitalization.sentences,
-                          maxLines: null,
+                          maxLines: 15,
                           controller: TextEditingController(text: _taskDescription),
-                          textInputAction: TextInputAction.done,
+                          textInputAction: TextInputAction.newline,
                           focusNode: _descriptionFocus,
                           onChanged: (value) {
                             //Check if we're on work page

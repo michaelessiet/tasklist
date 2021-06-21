@@ -15,6 +15,7 @@ class Workpage extends StatefulWidget {
 
 class _WorkpageState extends State<Workpage> {
   DatabaseHelper _dbHelper = DatabaseHelper();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,11 +56,10 @@ class _WorkpageState extends State<Workpage> {
                   builder: (context, snapshot) {
                     return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:2,
+                            crossAxisCount: 2,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
-                            childAspectRatio: 0.85
-                        ),
+                            childAspectRatio: 0.85),
                         itemCount: snapshot.data.length,
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {

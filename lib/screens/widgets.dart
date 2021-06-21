@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final String title;
   final int index;
   final String description;
@@ -9,30 +9,42 @@ class TaskCard extends StatelessWidget {
   TaskCard({this.title, this.description, this.darkthemeSwitch, this.index});
 
   @override
+  _TaskCardState createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: darkthemeSwitch ? Colors.black54 : Colors.white,
-          borderRadius: BorderRadius.circular(20)),
+        color: widget.darkthemeSwitch ? Colors.black54 : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              title ?? 'Unnamed task',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: darkthemeSwitch ? Colors.white : null),
-            ),
+            widget.title ?? 'Unnamed task',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: widget.darkthemeSwitch ? Colors.white : null),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 10),
             child: Text(
-              description ?? "This task has no description yet.",
+              widget.description ?? "This task has no description yet.",
               style: TextStyle(
-                  fontSize: 16, color: darkthemeSwitch ? Colors.white : null),
+                  fontSize: 16,
+                  color: widget.darkthemeSwitch ? Colors.white : null),
               maxLines: 3,
             ),
           )
